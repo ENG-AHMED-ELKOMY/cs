@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minia University - COMP101 Final Exam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #003366; /* Deep Blue */
+            --secondary: #b9925b; /* Gold */
+            --bg: #e0e5ec;
+            --text-main: #2d3436;
+            --text-light: #636e72;
+            --success: #00b894;
+            --error: #d63031;
+            
+            /* Neumorphism Shadows */
+            --shadow-light: -9px -9px 16px rgba(255, 255, 255, 0.8);
+            --shadow-dark: 9px 9px 16px rgba(163, 177, 198, 0.6);
+            --inner-shadow: inset 6px 6px 10px 0 rgba(163, 177, 198, 0.7), 
+                            inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        /* RTL Class for Arabic Mode */
+        .rtl-mode {
+            direction: rtl;
+            text-align: right;
+            font-family: 'Cairo', sans-serif !important;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--bg);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: var(--shadow-dark);
+            text-align: center;
+        }
+
+        .uni-brand h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .uni-brand h2 {
+            color: var(--secondary);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .user-tag {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            background: var(--bg);
+            border-radius: 50px;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            max-width: 800px;
+            margin: 20px auto;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: var(--bg);
+            padding: 15px 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .stat-card span {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .stat-card strong {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            color: var(--primary);
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--secondary);
+            display: inline-block;
+        }
+
+        /* Question Cards */
+        .q-card {
+            background: var(--bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            transition: transform 0.2s;
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .q-badge {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .translate-btn {
+            background: var(--bg);
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 12px;
+            box-shadow: 3px 3px 6px rgba(163, 177, 198, 0.6), 
+                       -3px -3px 6px rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .translate-btn:hover {
+            transform: translateY(-2px);
+            color: var(--secondary);
+        }
+
+        .translate-btn:active {
+            box-shadow: var(--inner-shadow);
+            transform: translateY(0);
+        }
+
+        .q-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        pre {
+            background: #eef2f5;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary);
+            font-family: 'Consolas', monospace;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+            font-size: 0.95rem;
+            direction: ltr !important;
+            text-align: left !important;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option-btn {
+            background: var(--bg);
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            color: var(--text-main);
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            box-shadow: var(--shadow-dark), var(--shadow-light);
+            transition: all 0.2s ease;
+            position: relative;
+            outline: none;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .option-btn:active:not(:disabled) {
+            box-shadow: var(--inner-shadow);
+            transform: translateY(0);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success);
+            color: white;
+            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.2);
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error);
+            color: white;
+            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.2);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+            opacity: 0.9;
+        }
+
+        /* Explanation */
+        .explanation-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            background: #eef2f5;
+            border-left: 4px solid var(--success);
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .toggle-exp-btn {
+            background: transparent;
+            border: none;
+            color: var(--secondary);
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            visibility: hidden;
+        }
+
+        /* Written Section */
+        .written-area textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            background: var(--bg);
+            box-shadow: var(--inner-shadow);
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            resize: vertical;
+            outline: none;
+        }
+
+        .action-btn {
+            background: var(--primary);
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 5px 5px 10px rgba(0,51,102,0.3);
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .model-answer {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            background: white;
+            border: 1px solid #ddd;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="uni-brand">
+            <h1>MINIA UNIVERSITY</h1>
+            <h2>Faculty of Science - Computer Science Dept.</h2>
+            <h2>Computer (1) Final Exam | 2024/2025</h2>
+        </div>
+        <div class="user-tag">
+            👋 Welcome, Eng. Ahmed Anwar (ABO ANWER)
+        </div>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stat-card">
+            <span>Progress</span>
+            <strong id="progress-text">0 / 25</strong>
+        </div>
+        <div class="stat-card">
+            <span>Score</span>
+            <strong id="score-text">0%</strong>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <h3 class="section-title">Part I: Multiple Choice Questions</h3>
+        <div id="quiz-container">
+            </div>
+
+        <h3 class="section-title">Part II: Code Correction & Analysis</h3>
+        <div class="q-card">
+            <div class="q-header">
+                <span class="q-badge">Written</span>
+            </div>
+            <div class="q-text">
+                Analyze the following C++ code snippet. It contains multiple syntax and logic errors. Rewrite the correct version of the code in the box below.
+            </div>
+            <pre><code>int x=10.2 y=z0,    // Line 1
+int x=x+y           // Line 2
+if(z=f)             // Line 3
+Cout <<"Zero";      // Line 4
+int s-20+10;        // Line 5</code></pre>
+            
+            <div class="written-area">
+                <textarea placeholder="Type your corrected code here..."></textarea>
+                <button class="action-btn" onclick="toggleModelAnswer()">Show Model Answer</button>
+            </div>
+
+            <div id="model-answer-box" class="model-answer">
+                <h4>Model Answer:</h4>
+                <pre><code>int x = 10;
+int y = 0; // Assuming value
+x = x + y; 
+if (x == 0) {
+    cout << "Zero";
+}
+int s = 20 + 10;</code></pre>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. Data Structure with Arabic Support (Including Explanations) ---
+        const questions = [
+            {
+                id: 1,
+                text: "Which of the following is NOT a function of the Input Unit?",
+                text_ar: "أي مما يلي ليس من وظائف وحدة الإدخال؟",
+                options: [
+                    "It transforms data into a format understandable by users.",
+                    "It converts the data into computer acceptable format.",
+                    "It reads instructions and data from external sources.",
+                    "It supplies data and instructions to the computer for processing."
+                ],
+                options_ar: [
+                    "تحويل البيانات إلى تنسيق مفهوم للمستخدمين.",
+                    "تحويل البيانات إلى تنسيق مقبول للحاسوب.",
+                    "قراءة التعليمات والبيانات من المصادر الخارجية.",
+                    "تزويد الحاسوب بالبيانات والتعليمات للمعالجة."
+                ],
+                correct: 0,
+                explanation: "Transforming data into a human-understandable format is the job of the Output Unit, not the Input Unit.",
+                explanation_ar: "تحويل البيانات إلى تنسيق مفهوم للبشر هو وظيفة وحدة الإخراج (Output Unit)، وليس وحدة الإدخال."
+            },
+            {
+                id: 2,
+                text: "A variable is/are...",
+                text_ar: "المتغير (Variable) هو...",
+                options: [
+                    "A memory segment for storing a determined value",
+                    "Numbers commonly used in programs",
+                    "A string that changes during program execution",
+                    "None of these"
+                ],
+                options_ar: [
+                    "جزء من الذاكرة لتخزين قيمة محددة",
+                    "أرقام تستخدم عادة في البرامج",
+                    "نص يتغير أثناء تنفيذ البرنامج",
+                    "لا شيء مما سبق"
+                ],
+                correct: 0,
+                explanation: "A variable is a named storage location in memory whose value can be manipulated.",
+                explanation_ar: "المتغير هو مكان محجوز في الذاكرة له اسم وقيمة يمكن أن تتغير أثناء التنفيذ."
+            },
+            {
+                id: 3,
+                text: "The decimal equivalent of (0.111)₂ will be:",
+                text_ar: "المكافئ العشري للرقم الثنائي (0.111)₂ هو:",
+                options: ["0.875", "0.5", "0.25", "0.625"],
+                options_ar: ["0.875", "0.5", "0.25", "0.625"],
+                correct: 0,
+                explanation: "(1 × 0.5) + (1 × 0.25) + (1 × 0.125) = 0.875",
+                explanation_ar: "الحساب: (1 × 0.5) + (1 × 0.25) + (1 × 0.125) = 0.875"
+            },
+            {
+                id: 4,
+                text: "Which of the following is an invalid representation of an algorithm?",
+                text_ar: "أي مما يلي يعتبر تمثيلاً غير صحيح للخوارزمية؟",
+                options: ["Syntax", "Pseudo codes", "Programs", "Flowcharts"],
+                options_ar: ["القواعد النحوية (Syntax)", "الأكواد الزائفة (Pseudo codes)", "البرامج (Programs)", "خرائط التدفق (Flowcharts)"],
+                correct: 0,
+                explanation: "Syntax refers to grammar rules of a language. Algorithms are represented by Flowcharts, Pseudo code, or Programs.",
+                explanation_ar: "القواعد النحوية (Syntax) تخص لغة البرمجة، بينما الخوارزمية تمثل بخرائط التدفق أو الكود الزائف أو البرامج."
+            },
+            {
+                id: 5,
+                text: "If m=10 and n=5, after executing the expression r=((m%n)==0)? ... the value of r is 22.",
+                text_ar: "إذا كانت m=10 و n=5، بعد تنفيذ التعبير الشرطي... فإن قيمة r هي 22.",
+                options: ["True", "False"],
+                options_ar: ["صح", "خطأ"],
+                correct: 1,
+                explanation: "Based on standard arithmetic, getting exactly 22 from inputs 10 and 5 is unlikely in this context. The statement is False.",
+                explanation_ar: "بناءً على العمليات الحسابية البسيطة (ضرب أو جمع)، الوصول للرقم 22 من المدخلات 10 و 5 غير محتمل هنا."
+            },
+            {
+                id: 6,
+                text: "Which lines contain errors in the provided code snippet?",
+                text_ar: "أي الأسطر تحتوي على أخطاء في الكود الموضح؟",
+                code: "int x=10.2 y=z0,\nint x=x+y\nif(z=f)\nCout <<\"Zero\";\nint s-20+10;",
+                options: ["No Errors", "Line 1", "Lines 1, 3", "Lines 1, 3, 5"],
+                options_ar: ["لا توجد أخطاء", "السطر 1", "السطرين 1 و 3", "الأسطر 1 و 3 و 5"],
+                correct: 3,
+                explanation: "Line 1 (syntax/undefined), Line 3 (undefined/logic), Line 5 (typo s-20) all contain errors.",
+                explanation_ar: "السطر 1 (خطأ في بناء الجملة ومتغيرات غير معرفة)، السطر 3 (استخدام = بدل == ومتغيرات غير معرفة)، السطر 5 (خطأ مطبعي)."
+            },
+            {
+                id: 7,
+                text: "What will be the values of n and k after executing the code?",
+                text_ar: "ما هي قيم المتغيرات n و k بعد تنفيذ الكود التالي؟",
+                code: "int n, k=5;\nn = ((100%5==0) ? k-1 : k+1);",
+                options: ["n=5 k=5", "n=4 k=5", "n=6 k=5", "n=6 k=4"],
+                options_ar: ["n=5 k=5", "n=4 k=5", "n=6 k=5", "n=6 k=4"],
+                correct: 1,
+                explanation: "100%5 is 0 (True). Executes true branch: k-1 (5-1=4). So n=4. k remains 5.",
+                explanation_ar: "باقي قسمة 100 على 5 هو 0 (صح). ينفذ الجزء الأول: k-1 (أي 5-1=4). إذن n=4 و k تظل 5."
+            },
+            {
+                id: 8,
+                text: "Which expression is equivalent to x += y*10?",
+                text_ar: "أي تعبير مما يلي يكافئ x += y*10؟",
+                options: ["x = x*(y+10)", "x = x*y+10", "x = x+(y*10)", "x = y*(x+10)"],
+                options_ar: ["x = x*(y+10)", "x = x*y+10", "x = x+(y*10)", "x = y*(x+10)"],
+                correct: 2,
+                explanation: "The += operator adds the right-hand side result to x. x = x + (y*10).",
+                explanation_ar: "المعامل += يقوم بإضافة ناتج الطرف الأيمن كاملاً إلى قيمة x الحالية. أي x = x + (y*10)."
+            },
+            {
+                id: 9,
+                text: "What will be the values of n and x variables after executing:",
+                text_ar: "ما هي قيم n و x بعد تنفيذ الكود التالي؟",
+                code: "int n=5, x;\nx = ++n * n;",
+                options: ["x=25 n=6", "x=36 n=8", "x=25 n=8", "x=36 n=5"],
+                options_ar: ["x=25 n=6", "x=36 n=8", "x=25 n=8", "x=36 n=5"],
+                correct: 1,
+                explanation: "Pre-increment ++n makes n=6. Then 6*6=36. Later lines in the problem increment n further to 8.",
+                explanation_ar: "الزيادة القبلية ++n تجعل n=6. ثم يتم الضرب 6*6=36. (ملاحظة: n تصبح 8 في خطوات لاحقة بالسؤال الأصلي)."
+            },
+            {
+                id: 10,
+                text: "Which statement adds 10 to 'discount' when 'price' is greater than or equal to 600?",
+                text_ar: "أي جملة برمجية تضيف 10 إلى 'discount' عندما يكون 'price' أكبر من أو يساوي 600؟",
+                options: [
+                    "if(price>=600); discount+=10;",
+                    "if(price>600) discount+=10;",
+                    "if(price>=600) discount+=10;",
+                    "if(price<600) discount+=10;"
+                ],
+                options_ar: [
+                    "if(price>=600); discount+=10;",
+                    "if(price>600) discount+=10;",
+                    "if(price>=600) discount+=10;",
+                    "if(price<600) discount+=10;"
+                ],
+                correct: 2,
+                explanation: "Option C correctly uses the >= operator and proper syntax.",
+                explanation_ar: "الخيار C هو الصحيح لأنه يستخدم المعامل >= ولا يضع فاصلة منقوطة بعد الشرط مباشرة."
+            },
+            {
+                id: 11,
+                text: "The octal equivalent of (1100101.001010)₂ is...",
+                text_ar: "المكافئ الثماني للرقم الثنائي (1100101.001010)₂ هو...",
+                options: ["624.12", "145.12", "154.12", "145.21"],
+                options_ar: ["624.12", "145.12", "154.12", "145.21"],
+                correct: 1,
+                explanation: "1100101 -> 001 100 101 -> 1 4 5. Fractional: 001 010 -> 1 2. Result: 145.12",
+                explanation_ar: "بتقسيم الرقم لثلاثيات: الصحيح (001 100 101) = 145، والكسر (001 010) = 12. النتيجة 145.12"
+            },
+            {
+                id: 12,
+                text: "The expression 4*(5+2) is evaluated strictly left to right.",
+                text_ar: "يتم تقييم التعبير 4*(5+2) من اليسار إلى اليمين فقط.",
+                options: ["True", "False"],
+                options_ar: ["صح", "خطأ"],
+                correct: 1,
+                explanation: "False. Parentheses (5+2) are evaluated first due to precedence.",
+                explanation_ar: "خطأ. الأقواس (5+2) لها أولوية التنفيذ قبل الضرب، وليس مجرد الترتيب من اليسار لليمين."
+            },
+            {
+                id: 13,
+                text: "Any algorithm is a program.",
+                text_ar: "أي خوارزمية تعتبر برنامجاً.",
+                options: ["True", "False"],
+                options_ar: ["صح", "خطأ"],
+                correct: 1,
+                explanation: "False. An algorithm is a logical design; a program is the implementation code.",
+                explanation_ar: "خطأ. الخوارزمية هي خطة الحل المنطقية، أما البرنامج فهو التنفيذ الفعلي باستخدام لغة برمجة."
+            },
+            {
+                id: 14,
+                text: "What will be the value of x after executing:",
+                text_ar: "ما هي قيمة x بعد التنفيذ؟",
+                code: "int x=10;\nx += (x>5)&&(x<15) ? 5 : 10;",
+                options: ["10", "15", "20", "Compilation error"],
+                options_ar: ["10", "15", "20", "خطأ ترجمة"],
+                correct: 1,
+                explanation: "Condition is True. Ternary returns 5. x = 10 + 5 = 15.",
+                explanation_ar: "الشرط (x>5 و x<15) صحيح. المعامل الثلاثي يعيد 5. إذن x = 10 + 5 = 15."
+            },
+            {
+                id: 15,
+                text: "Output of the code fragment?",
+                text_ar: "مخرجات الكود التالي؟",
+                code: "int found=0, count=5;\nif (!found || --count==0) cout << 'danger';\ncout << --count;",
+                options: ["danger count=5", "danger count=4", "danger count=3", "count=3"],
+                options_ar: ["danger count=5", "danger count=4", "danger count=3", "count=3"],
+                correct: 1,
+                explanation: "!found is True. OR (||) short-circuits. Prints 'danger'. Next line executes --count (5->4).",
+                explanation_ar: "الشرط !found صحيح. المعامل OR يكتفي بذلك ولا ينفذ الجزء الثاني. يطبع danger. السطر التالي ينقص count لتصبح 4."
+            },
+            {
+                id: 16,
+                text: "Output of the code fragment?",
+                text_ar: "مخرجات الكود التالي؟",
+                code: "int a=10, m=20, n=30, max;\nif(m>n) { max=m; a++; }\nelse max=n; a--;\ncout << a << max;",
+                options: ["a=10 max=30", "a=11 max=30", "a=9 max=30", "a=10 max=20"],
+                options_ar: ["a=10 max=30", "a=11 max=30", "a=9 max=30", "a=10 max=20"],
+                correct: 2,
+                explanation: "m>n is False. Else executes `max=n`. `a--` executes regardless of if/else. a becomes 9.",
+                explanation_ar: "الشرط m>n خطأ. ينفذ else وهي max=n. الأمر a-- خارج الأقواس فينفذ في جميع الأحوال، لتصبح a=9."
+            },
+            {
+                id: 17,
+                text: "Which 'if' statement is equivalent to: n=(x>0)?'Pos':((x<0)?'Neg':'Zero');",
+                text_ar: "أي جملة 'if' تكافئ المعامل الشرطي التالي؟",
+                options: ["Option A", "Option B", "Option C", "Option D"],
+                options_ar: ["الخيار A", "الخيار B", "الخيار C", "الخيار D"],
+                correct: 2,
+                explanation: "Option C correctly maps: if(x>0) Pos, else if(x<0) Neg, else Zero.",
+                explanation_ar: "الخيار C يمثل المنطق الصحيح: إذا كان أكبر من صفر (Pos)، وإلا إذا كان أصغر (Neg)، وإلا (Zero)."
+            },
+            {
+                id: 18,
+                text: "Hexadecimal equivalent of (6532)₈?",
+                text_ar: "المكافئ السداسي عشر للرقم (6532)₈؟",
+                options: ["A01", "A02", "D5A", "DA5"],
+                options_ar: ["A01", "A02", "D5A", "DA5"],
+                correct: 2,
+                explanation: "Octal 6532 -> Binary -> Hex D5A.",
+                explanation_ar: "يتم تحويل الثماني 6532 إلى ثنائي، ثم تجميع البتات أربعات للتحويل للسداسي عشر فتكون النتيجة D5A."
+            },
+            {
+                id: 19,
+                text: "The 2's complement of 11 is:",
+                text_ar: "المتمم الثنائي (2's complement) للرقم 11 هو:",
+                options: ["1011", "0010", "0101", "0100"],
+                options_ar: ["1011", "0010", "0101", "0100"],
+                correct: 0,
+                explanation: "Binary for 11 is 1011.",
+                explanation_ar: "التمثيل الثنائي للرقم 11 هو 1011."
+            },
+            {
+                id: 20,
+                text: "Which operator is incorrect for comparisons?",
+                text_ar: "أي معامل مما يلي غير صحيح للاستخدام في المقارنات؟",
+                options: ["!=", "==", "2", ">"],
+                options_ar: ["!=", "==", "2", ">"],
+                correct: 2,
+                explanation: "'2' is a number, not an operator.",
+                explanation_ar: "الرقم 2 هو قيمة عددية وليس معامل مقارنة منطقي."
+            },
+            {
+                id: 21,
+                text: "Subtracting (001100)₂ from (101001)₂ gives:",
+                text_ar: "طرح (001100)₂ من (101001)₂ يعطي:",
+                options: ["1011101", "011101", "11010101", "11010111"],
+                options_ar: ["1011101", "011101", "11010101", "11010111"],
+                correct: 1,
+                explanation: "41 - 12 = 29 (011101).",
+                explanation_ar: "بالعشري: 41 - 12 = 29. وتمثيل 29 بالثنائي هو 011101."
+            },
+            {
+                id: 22,
+                text: "Output of: int a=10, b=3; cout << a+b/2;",
+                text_ar: "مخرجات: int a=10, b=3; cout << a+b/2;",
+                options: ["6", "11", "11.5", "6.5"],
+                options_ar: ["6", "11", "11.5", "6.5"],
+                correct: 1,
+                explanation: "Integer division: 3/2 = 1. Then 10 + 1 = 11.",
+                explanation_ar: "القسمة تتم أولاً: 3/2 = 1 (لأنها قسمة أعداد صحيحة). ثم 10 + 1 = 11."
+            },
+            {
+                id: 23,
+                text: "Output of: int a=5, b=0; if(a || b && !a)...",
+                text_ar: "مخرجات: int a=5, b=0; if(a || b && !a)...",
+                options: ["No", "Yes", "Error", "Undefined"],
+                options_ar: ["No", "Yes", "Error", "Undefined"],
+                correct: 1,
+                explanation: "Logic evaluates to True. Prints 'Yes'.",
+                explanation_ar: "المنطق يقيم إلى (صح) لأن a=5 (صح). يطبع Yes."
+            },
+            {
+                id: 24,
+                text: "z=x*y+1 and z=x*y++ produce same result for x=1, y=2.",
+                text_ar: "التعبيران z=x*y+1 و z=x*y++ يعطيان نفس النتيجة لـ x=1 و y=2.",
+                options: ["True", "False"],
+                options_ar: ["صح", "خطأ"],
+                correct: 1,
+                explanation: "First gives 3. Second gives 2 (post-increment uses original y).",
+                explanation_ar: "الأول يعطي 3. الثاني يستخدم y الأصلية (2) قبل الزيادة، فالناتج 2. النتيجتان مختلفتان."
+            },
+            {
+                id: 25,
+                text: "Are all statements correct? int total=9; char name=\"C\"; float profit=12.3.12.3;",
+                text_ar: "هل جميع الجمل صحيحة؟ int total=9; char name=\"C\"; float profit=12.3.12.3;",
+                options: ["True", "False"],
+                options_ar: ["صح", "خطأ"],
+                correct: 1,
+                explanation: "False. Syntax errors in char quotes and float format.",
+                explanation_ar: "خطأ. المتغير char يستخدم علامات تنصيص مفردة ' '، والرقم العشري لا يمكن أن يحتوي على علامتين عشريتين."
+            }
+        ];
+
+        let score = 0;
+        let answeredCount = 0;
+        let langState = new Array(questions.length).fill(false);
+
+        // --- 2. Render Functions ---
+        function renderQuestions() {
+            const container = document.getElementById('quiz-container');
+            
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'q-card';
+                card.id = `q-card-${index}`;
+                
+                const codeBlock = q.code ? `<pre><code>${q.code}</code></pre>` : '';
+                
+                let optionsHtml = '';
+                q.options.forEach((opt, i) => {
+                    optionsHtml += `<button class="option-btn" id="btn-${index}-${i}" onclick="checkAnswer(${index}, ${i}, this)">${opt}</button>`;
+                });
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-badge">Question ${index + 1}</span>
+                        <button class="translate-btn" onclick="toggleTranslation(${index})">
+                            🌐 Translate / ترجمة
+                        </button>
+                    </div>
+                    <div class="q-text" id="q-text-${index}">${q.text}</div>
+                    ${codeBlock}
+                    <div class="options-grid" id="options-${index}">
+                        ${optionsHtml}
+                    </div>
+                    <button class="toggle-exp-btn" id="exp-btn-${index}" onclick="toggleExplanation(${index})">
+                        👁 Explain Solution
+                    </button>
+                    <div class="explanation-box" id="exp-box-${index}">
+                        <strong>Explanation:</strong> ${q.explanation}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- 3. Translation Logic (Updated for Explanations) ---
+        function toggleTranslation(index) {
+            const isArabic = !langState[index]; 
+            langState[index] = isArabic;
+
+            const q = questions[index];
+            const card = document.getElementById(`q-card-${index}`);
+            const textElem = document.getElementById(`q-text-${index}`);
+            const optsDiv = document.getElementById(`options-${index}`);
+            const buttons = optsDiv.getElementsByTagName('button');
+            const expBox = document.getElementById(`exp-box-${index}`);
+
+            // 1. Toggle Text
+            textElem.innerText = isArabic ? q.text_ar : q.text;
+
+            // 2. Toggle Options
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].innerText = isArabic ? q.options_ar[i] : q.options[i];
+            }
+
+            // 3. Toggle Explanation Text
+            if (isArabic) {
+                expBox.innerHTML = `<strong>التفسير:</strong> ${q.explanation_ar}`;
+            } else {
+                expBox.innerHTML = `<strong>Explanation:</strong> ${q.explanation}`;
+            }
+
+            // 4. Toggle Styles (RTL)
+            if (isArabic) {
+                card.classList.add('rtl-mode');
+                textElem.classList.add('rtl-mode');
+                for (let btn of buttons) {
+                    btn.classList.add('rtl-mode');
+                }
+            } else {
+                card.classList.remove('rtl-mode');
+                textElem.classList.remove('rtl-mode');
+                for (let btn of buttons) {
+                    btn.classList.remove('rtl-mode');
+                }
+            }
+        }
+
+        // --- 4. Interaction Logic ---
+        function checkAnswer(qIndex, selectedOptIndex, btnElement) {
+            const q = questions[qIndex];
+            const optionsDiv = document.getElementById(`options-${qIndex}`);
+            const buttons = optionsDiv.getElementsByTagName('button');
+            const expBtn = document.getElementById(`exp-btn-${qIndex}`);
+
+            for (let btn of buttons) {
+                btn.disabled = true;
+            }
+
+            if (selectedOptIndex === q.correct) {
+                btnElement.classList.add('correct');
+                score++;
+            } else {
+                btnElement.classList.add('wrong');
+                buttons[q.correct].classList.add('correct');
+            }
+
+            expBtn.style.visibility = 'visible';
+            answeredCount++;
+            updateStats();
+        }
+
+        function updateStats() {
+            const total = questions.length;
+            const percentage = Math.round((score / total) * 100);
+            document.getElementById('progress-text').innerText = `${answeredCount} / ${total}`;
+            document.getElementById('score-text').innerText = `${percentage}%`;
+        }
+
+        function toggleExplanation(index) {
+            const box = document.getElementById(`exp-box-${index}`);
+            if (box.style.display === 'block') {
+                box.style.display = 'none';
+            } else {
+                box.style.display = 'block';
+            }
+        }
+
+        function toggleModelAnswer() {
+            const box = document.getElementById('model-answer-box');
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+        }
+
+        window.onload = renderQuestions;
+
+    </script>
+</body>
+</html>
